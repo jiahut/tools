@@ -15,7 +15,9 @@ def look_up(word)
   has_found = false
   means = Array.new
   ####lazy evaluation####
-  means.push proc{doc.css('#en-simple-means>div:first>p')},proc{doc.css('#en-net-means li')},proc{doc.css('#en-simple-means p a')}
+  means.push proc{doc.css('#en-simple-means>div:first>p')},
+             proc{doc.css('#en-net-means li')},
+             proc{doc.css('#en-simple-means p a')}
   means.each do |mean|
       content = mean.call
     unless content.empty?
