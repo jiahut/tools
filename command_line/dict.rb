@@ -1,6 +1,7 @@
 require 'nokogiri'
 require 'open-uri'
 require 'uri'
+require 'sqlite3'
 
 def check_usage
   if ARGV.empty?
@@ -9,10 +10,40 @@ def check_usage
   end
 end
 
+def get_db
+  db_file = "#{File.realpath(__FILE__)}/../dict.sqlite3"
+  ddl_first_time = nil
+  unless File.exist?(db_file)
+    ddl_first_time = proc{ |db|
+      db.execute <<-SQL
+      create table words (
+        word varchar(30),
+        mean varchar(100),
+        count int
+      );
+      SQL
+    }
+  end
+  db = SQLite3::Database.open db_file
+  ddl_first_time.call(db) if ddl_first_time
+  return db
+end
+
+def insert2db(word,mean)
+  db = get_db
+  found_word = db.execute "select * from words where word = '#{word}'"
+  unless found_word.empty?
+    db.execute "update words set count = ? where word = '#{word}'",found_word[0][2] + 1
+  else
+    db.execute 'insert into words values(?,?,?)',[word,mean,1]
+  end
+end
+
 def look_up(word)
   uri = "http://dict.baidu.com/s?wd=#{word}"
   doc = Nokogiri::HTML(open(URI.escape(uri)))
   has_found = false
+  word2db = [word]
   means = Array.new
   ####lazy evaluation####
   means.push proc{doc.css('#en-simple-means>div:first>p')},
@@ -22,7 +53,11 @@ def look_up(word)
       content = mean.call
     unless content.empty?
       content.each do |node|
-        puts node.text
+        puts _tmp = node.text
+        word2db << _tmp
+        #Thread.new(word2db) do |word2db|
+        insert2db(*word2db)
+        #end
       end
       has_found = true
       break
