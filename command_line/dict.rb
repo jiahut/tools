@@ -52,13 +52,15 @@ def look_up(word)
   means.each do |mean|
       content = mean.call
     unless content.empty?
+      explain = String.new
       content.each do |node|
         puts _tmp = node.text
-        word2db << _tmp
-        #Thread.new(word2db) do |word2db|
-        insert2db(*word2db)
-        #end
+        explain += _tmp + '.  '
       end
+      word2db << explain
+      #Thread.new(word2db) do |word2db|
+      insert2db(*word2db)
+      #end
       has_found = true
       break
     end
