@@ -55,7 +55,7 @@ def look_up(word)
       explain = String.new
       content.each do |node|
         puts _tmp = node.text
-        explain += _tmp + '.  '
+        explain << _tmp << '.  '
       end
       word2db << explain
       #Thread.new(word2db) do |word2db|
