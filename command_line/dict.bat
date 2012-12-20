@@ -2,5 +2,5 @@
 rem if env['path'].include? dict.rb 
 rem 	ruby -S dict.rb %*
 rem else
-ruby \path\to\dict.rb %*
+ruby %~dp1/dict.rb %*
 rem end
