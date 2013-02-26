@@ -4,7 +4,7 @@
 
 1. command line dict  
   * 命令行下的字典查询工具  
-    >>其实又是一只百度爬虫  
+    >>一只百度爬虫  
 2. sublime project manager 
   * 管理sublime project  
     >>CRUD: 增，删，查，打开
