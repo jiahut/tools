@@ -8,31 +8,30 @@ module SublProject
   SUBLEXC = 'D:/apps/Sublime_Text_2.0.1/sublime_text.exe'
 
   def self.create(project_path,project_name = nil)
+    p project_name
     project = Hash.new
     path = Hash.new
     folders = project["folders"] = Array.new
     folders << path
     path_info =  project_path.split(/\\|:|\//)
-    file_name = project_name || path_info[-1]
-    file_name += ".sublime-project"
-    file_name = SUBLHOME + file_name
+    project_file = getFilePath(project_name || path_info[-1])
     path["path"] = '/' << path_info.delete_if {|e| e == "" }.join('/')
     Dir.mkdir(SUBLHOME) unless File.exists? SUBLHOME
-    if File.exists? file_name
-      throw SublException.new("#{file_name} exists already!,you must change project_name = #{project_name}")
+    if File.exists? project_file
+      throw SublException.new("#{project_name} exists already!,you can change the other name")
     else
-      File.open(file_name,"w") do |file|
+      File.open(project_file,"w") do |file|
         file << project.to_json
       end
     end
   end
 
   def self.delete(project_name)
-    file_name = project_name
-    file_name += ".sublime-project"
-    file_name = SUBLHOME + file_name
-    if File.exists? file_name
-      File.delete(file_name)
+    project_file = getFilePath(project_name)
+    workspace_file = getFilePath(project_name,".sublime-workspace")
+    if File.exists? project_file
+      File.delete(project_file)
+      File.delete(workspace_file) if File.exists? workspace_file
     else
       throw SublException.new("named '#{project_name}' project not exists!")
     end
@@ -40,21 +39,25 @@ module SublProject
 
   def self.list(*)
     Dir.chdir(SUBLHOME)
-    Dir.glob("*").each do |project|
-      puts project
+    Dir.glob("*.sublime-project").each do |project|
+      puts project.split(".")[0...-1].join(".")
     end
   end
 
   def self.open(project_name)
-    file_name = project_name
-    file_name += ".sublime-project"
-    file_name = SUBLHOME + file_name
-    unless File.exists? file_name
-      throw SublException.new("#{project_name} project not exists!")
+    project_file = getFilePath(project_name)
+    unless File.exists? project_file
+      throw SublException.new("named #{project_name} project not exists!")
     end
-    cmd = "@start /b #{SUBLEXC} #{file_name}"
+    cmd = "@start /b #{SUBLEXC} #{project_file}"
     system(cmd)
   end
+
+  private
+  def getFilePath(file_name,ext = ".sublime-project")
+    return SublProject::SUBLHOME + file_name + ext
+  end
+  module_function :getFilePath
 end
 
 require 'optparse'
@@ -87,6 +90,10 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-options.each do |action , argv|
-  SublProject.send action.to_sym,*argv
+begin
+  options.each do |action , argv|
+    SublProject.send action.to_sym,*argv
+  end
+rescue SublProject => e
+  puts e.message
 end
