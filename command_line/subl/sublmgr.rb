@@ -8,7 +8,6 @@ module SublProject
   SUBLEXC = 'D:/apps/Sublime_Text_2.0.1/sublime_text.exe'
 
   def self.create(project_path,project_name = nil)
-    p project_name
     project = Hash.new
     path = Hash.new
     folders = project["folders"] = Array.new
