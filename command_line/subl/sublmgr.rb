@@ -5,7 +5,7 @@ class SublException < Exception;end
 module SublProject
   
   SUBLHOME = Dir.home() << '/.subl/'
-  SUBLEXC = 'D:/apps/Sublime_Text_2.0.1/sublime_text.exe'
+  SUBLEXC = 'D:/apps/Sublime_Text_Build_3012/sublime_text_crack.exe'
 
   def self.create(project_path,project_name = nil)
     project = Hash.new

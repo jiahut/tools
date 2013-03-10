@@ -1,0 +1,1 @@
+@call "D:\apps\Vim\vim73\vim.exe" %*
