@@ -21,6 +21,6 @@ if __FILE__ == $0
     ["lide_#{ i }.jpg","https://speakerd.s3.amazonaws.com/presentations/5092eff5c2d2db0002006290/slide_#{ i }.jpg"]
   end.each do |file_name,url|
     puts "downLoading... <" << url << ">"
-    Capturer.download_res(file_name,url)
+    Capturer.download(file_name,url)
   end
 end
