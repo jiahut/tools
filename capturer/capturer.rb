@@ -18,7 +18,7 @@ if __FILE__ == $0
   end
   Dir.chdir _dir
   (0..124).map do |i|
-    ["lide_#{ i }.jpg","https://speakerd.s3.amazonaws.com/presentations/5092eff5c2d2db0002006290/slide_#{ i }.jpg"]
+    ["lide_#{ i }.jpg","https://speakerd.s3.amazonaws.com/presentations/f080c130744c01306b5122000a1c8083/slide_#{ i }.jpg"]
   end.each do |file_name,url|
     puts "downLoading... <" << url << ">"
     Capturer.download(file_name,url)
