@@ -14,3 +14,5 @@
   * log handler by replace with regex
 6. 动态db helper
   * 动态生成单表数据库表名
+7. api-client 
+  * 模拟客户端发送请求
