@@ -18,3 +18,5 @@
 * 模拟客户端发送请求
 #### encrypt/decrypt
 * RSA非对称加密
+> openssl genrsa -out pri.key 2048
+> openssl rsa -in pri.key -pubout -out pub.key
